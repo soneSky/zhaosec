@@ -7,27 +7,30 @@ $db_name = 'zhao';
 function getDbConnection() {
     global $db_name;
     
+    // PHP 8 默认 mysqli 抛出异常，关闭异常模式以兼容 connect_error 检查
+    mysqli_report(MYSQLI_REPORT_OFF);
+    
     // 连接配置列表（按优先级排序）
     $configs = [
-        // 1. 本地连接 - 有密码（LAMP 环境）
-        ['host' => '127.0.0.1', 'user' => 'root', 'pass' => 'root'],
-        // 2. 本地连接 - 无密码（基础镜像默认）
-        ['host' => '127.0.0.1', 'user' => 'root', 'pass' => ''],
-        // 3. 本地连接 - 密码 123456（phpStudy 环境）
+        // 1. 本地连接 - 密码 123456（phpStudy 环境）
         ['host' => '127.0.0.1', 'user' => 'root', 'pass' => '123456'],
-        // 4. Docker 网络 - 服务名
-        ['host' => 'db', 'user' => 'root', 'pass' => 'root'],
-        // 5. Docker 网络 - 容器 IP
-        ['host' => '192.168.100.16', 'user' => 'root', 'pass' => 'root'],
-        // 6. 主机名 localhost
+        // 2. 本地连接 - 有密码（LAMP 环境）
+        ['host' => '127.0.0.1', 'user' => 'root', 'pass' => 'root'],
+        // 3. 本地连接 - 无密码（基础镜像默认）
+        ['host' => '127.0.0.1', 'user' => 'root', 'pass' => ''],
+        // 4. 主机名 localhost
         ['host' => 'localhost', 'user' => 'root', 'pass' => 'root'],
         ['host' => 'localhost', 'user' => 'root', 'pass' => ''],
+        // 5. Docker 网络 - 服务名
+        ['host' => 'db', 'user' => 'root', 'pass' => 'root'],
+        // 6. Docker 网络 - 容器 IP
+        ['host' => '192.168.100.16', 'user' => 'root', 'pass' => 'root'],
     ];
     
     $lastError = '';
     
     foreach ($configs as $config) {
-        $conn = @new mysqli($config['host'], $config['user'], $config['pass'], $db_name);
+        $conn = @new mysqli($config['host'], $config['user'], $config['pass']);
         
         if (!$conn->connect_error) {
             // 连接成功，确保数据库存在

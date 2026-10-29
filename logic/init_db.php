@@ -9,7 +9,11 @@ echo "<h2>🧩 逻辑漏洞场景 - 数据库初始化</h2>";
 
 // 多密码容错连接
 $dbname = 'zhao';
-$passwords = ['root', '', '123456'];
+
+// PHP 8 默认 mysqli 抛出异常，关闭异常模式以兼容 connect_error 检查
+mysqli_report(MYSQLI_REPORT_OFF);
+
+$passwords = ['123456', 'root', ''];
 $hosts = ['127.0.0.1', 'localhost'];
 $conn = null;
 $lastError = '';

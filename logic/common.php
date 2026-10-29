@@ -8,8 +8,11 @@ ini_set('display_errors', 0);
 function getDBConnection() {
     $dbname = 'zhao';
     
+    // PHP 8 默认 mysqli 抛出异常，关闭异常模式以兼容 connect_error 检查
+    mysqli_report(MYSQLI_REPORT_OFF);
+    
     // 密码候选列表（按优先级排序）
-    $passwords = ['root', '', '123456'];
+    $passwords = ['123456', 'root', ''];
     // 主机候选列表
     $hosts = ['127.0.0.1', 'localhost'];
     
